@@ -1,27 +1,39 @@
-import ca.uhn.fhir.context.FhirContext;
-import ca.uhn.fhir.rest.client.api.IGenericClient;
-import ca.uhn.fhir.rest.client.interceptor.LoggingInterceptor;
+import java.util.Date;
+
 import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.r4.model.Patient;
+import org.hl7.fhir.r4.model.StringType;
 
 public class SampleClient {
+	
 
     public static void main(String[] theArgs) {
-
-        // Create a FHIR client
-        FhirContext fhirContext = FhirContext.forR4();
-        IGenericClient client = fhirContext.newRestfulGenericClient("http://hapi.fhir.org/baseR4");
-        client.registerInterceptor(new LoggingInterceptor(false));
-
-        // Search for Patient resources
-        Bundle response = client
-                .search()
-                .forResource("Patient")
-                .where(Patient.FAMILY.matches().value("SMITH"))
-                .returnBundle(Bundle.class)
-                .execute();
-
-
+    	
+    	//// Search for Patient resources Sorted by the patient's first name
+    	Bundle response = ResourceService.getClientResource(Patient.class.getSimpleName(), "SMITH", Patient.NAME);
+    	
+    	response.getEntry().forEach(entry -> {
+    		Patient patient = (Patient) entry.getResource();
+    		printName(patient);
+    	});
+    	
     }
+    
+    /**
+     * prints the first and last name, and birth date of each Patient to the screen
+     */
+    private static void printName(Patient patient) {
+    		
+		if(patient.getName().listIterator().hasNext()) {
+			StringType nameGiven = patient.getName().listIterator().next().getGiven().iterator().next();
+			String nameFamily = patient.getName().listIterator().next().getFamily();
+			Date birthDate = patient.getBirthDate();
+			
+			System.out.println(nameGiven+", "+nameFamily+", "+ birthDate);
+		}
+    	
+    }
+
+	
 
 }
