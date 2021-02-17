@@ -15,14 +15,12 @@ public class SampleClient {
 	public static void main(String[] theArgs) {
 
 		try {
-			// prints the first and last name, and birth date of each Patient with the name
-			// "Smith" to the screen
 			printNameBirthDate("SMITH");
 
-			Path path = createTextFile();
-
+			Path path = createTextFile("lastNames.txt");
+			
 			searchLastNamesFromFile(path);
-
+			
 			searchLastNamesFromFileThreeTimes(path);
 
 		} catch (IOException e) {
@@ -41,7 +39,7 @@ public class SampleClient {
 	 * @param path Path of the file with the last names
 	 * @throws IOException
 	 */
-	private static void searchLastNamesFromFileThreeTimes(Path path) throws IOException {
+	public static void searchLastNamesFromFileThreeTimes(Path path) throws IOException {
 		for (int i = 0; i < 3; i++) {
 			if (i == 2) {
 				PatientResourceService.setCacheable(false);
@@ -58,7 +56,7 @@ public class SampleClient {
 	 * @param path Path of the file with the last names
 	 * @throws IOException
 	 */
-	private static void searchLastNamesFromFile(Path path) throws IOException {
+	public static void searchLastNamesFromFile(Path path) throws IOException {
 
 		try (Stream<String> stream = Files.lines(path)) {
 			PatientResourceService.restartStopWatch();
@@ -72,9 +70,9 @@ public class SampleClient {
 	 * 
 	 * @throws IOException
 	 */
-	private static Path createTextFile() throws IOException {
+	public static Path createTextFile(String fileName) throws IOException {
 
-		Path path = Paths.get("lastNames.txt").toAbsolutePath();
+		Path path = Paths.get(fileName).toAbsolutePath();
 
 		try (BufferedWriter writer = Files.newBufferedWriter(path)) {
 			Bundle response = PatientResourceService.getPatientResource(null, Patient.NAME, 20);
@@ -102,7 +100,7 @@ public class SampleClient {
 	 * 
 	 * @param lastName
 	 */
-	private static void printNameBirthDate(String lastName) {
+	public static void printNameBirthDate(String lastName) {
 		// Search for Patient resources Sorted by the patient's first name
 		Bundle response = PatientResourceService.getPatientResource(lastName, Patient.NAME, 10);
 

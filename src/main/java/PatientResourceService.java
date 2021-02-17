@@ -26,7 +26,6 @@ public class PatientResourceService {
 	 * @param familyName Search for patients with the same family name
 	 * @param sortParam The name of the parameter to be sorted
 	 * @param count how many resources should be returned on a single page.
-	 * @param isCahccheEnable 
 	 * @return Return a Bundle of Patient Resource of the ResourceType informed
 	 */
 	public static Bundle getPatientResource(String familyName, StringClientParam sortParam, int count) {
